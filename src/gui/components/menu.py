@@ -1,7 +1,8 @@
 import customtkinter as ctk
 
 from src.settings import *
-from src.gui.components.panels import SliderPanel, SegmentedPanel, SwitchPanel, DropdownPanel, RevertButton
+from src.gui.components.panels import SliderPanel, SegmentedPanel, SwitchPanel, DropdownPanel, RevertButton, \
+    FileNamePanel
 
 
 class Menu(ctk.CTkTabview):
@@ -75,3 +76,10 @@ class ExportFrame(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(master=parent, fg_color='transparent')
         self.pack(expand=True, fill="both")
+
+        # data
+        self.name_string = ctk.StringVar()
+        self.file_string = ctk.StringVar(value='png')
+
+        # widgets
+        FileNamePanel(self, self.name_string, self.file_string)

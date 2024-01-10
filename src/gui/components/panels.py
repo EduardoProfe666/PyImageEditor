@@ -27,7 +27,7 @@ class SliderPanel(Panel):
                       variable=self.data_var,
                       from_=min_value,
                       to=max_value).grid(row=1, column=0, columnspan=2, sticky='ew',
-                                                     padx=5, pady=5)
+                                         padx=5, pady=5)
 
     def update_text(self, *args):
         self.num_label.configure(text=f'{round(self.data_var.get(), 2)}')
@@ -70,3 +70,34 @@ class RevertButton(ctk.CTkButton):
     def revert(self):
         for var, value in self.args:
             var.set(value)
+
+
+class FileNamePanel(Panel):
+    def __init__(self, parent, name_string, file_string):
+        super().__init__(parent=parent)
+
+        self.file_string = file_string
+        self.file_string.trace('w', self.update_text)
+        self.name_string = name_string
+        self.name_string.trace('w', self.update_text)
+
+        ctk.CTkEntry(self, textvariable=self.name_string).pack(fill='x', padx=20, pady=5)
+        frame = ctk.CTkFrame(self, fg_color='transparent')
+        png_check = ctk.CTkCheckBox(frame, text='png', variable=self.file_string, onvalue='png', offvalue='jpg',
+                                    command= lambda: self.click('png'))
+        jpg_check = ctk.CTkCheckBox(frame, text='jpg', variable=self.file_string, onvalue='jpg', offvalue='png',
+                                    command=lambda: self.click('jpg'))
+        png_check.pack(side='left', fill='x', expand=True)
+        jpg_check.pack(side='left', fill='x', expand=True)
+        frame.pack(expand=True, fill='x', padx=20)
+
+        self.output = ctk.CTkLabel(self, text='')
+        self.output.pack()
+
+    def click(self, value):
+        self.file_string.set(value)
+
+    def update_text(self, *args):
+        if self.name_string.get():
+            text = self.name_string.get().replace(' ', '_') + '.' + self.file_string.get()
+            self.output.configure(text=text)

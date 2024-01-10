@@ -12,5 +12,5 @@ class ImportImage(ctk.CTkFrame):
 
     def open_dialog(self):
         path = filedialog.askopenfile(title='Seleccione la imagen deseada',
-                                      filetypes=[("Imágenes", ["*.png", '*.jpg', '*.jpeg'])]).name
+                                      filetypes=[("Imágenes", ["*.png", '*.jpg', '*.jpeg', '*.gif'])]).name
         self.import_func(path)
