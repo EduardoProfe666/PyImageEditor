@@ -193,5 +193,3 @@ class App(ctk.CTk):
                                  'Fallo durante la exportación de la imagen. Vuelva a intentarlo')
 
 
-if __name__ == '__main__':
-    App()
