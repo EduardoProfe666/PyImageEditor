@@ -1,7 +1,7 @@
 import customtkinter as ctk
 
-from src.code.settings import *
-from src.gui.components.panels import Panel, SliderPanel, SegmentedPanel, SwitchPanel, DropdownPanel
+from src.settings import *
+from src.gui.components.panels import SliderPanel, SegmentedPanel, SwitchPanel, DropdownPanel
 
 
 class Menu(ctk.CTkTabview):
@@ -28,7 +28,7 @@ class PositionFrame(ctk.CTkFrame):
         self.pack(expand=True, fill="both")
 
         SliderPanel(self, 'Rotación', rotation, -180, 180)
-        SliderPanel(self, 'Zoom', zoom, -300, 300)
+        SliderPanel(self, 'Zoom', zoom, 0, 100)
         SegmentedPanel(self, 'Inversión', invert, FLIP_OPTIONS)
 
 
@@ -39,10 +39,8 @@ class ColorFrame(ctk.CTkFrame):
 
         SwitchPanel(self, (color_vars['grayscale'], 'B/N'), (color_vars['invert'], 'Invertir'))
         SwitchPanel(self, (color_vars['sepia'], 'Sepia'))
-        SliderPanel(self, 'Brillo', color_vars.get('brightness'), -5, 5)
-        SliderPanel(self, 'Vibrance', color_vars.get('vibrance'), -5, 5)
-        SliderPanel(self, 'Tono', color_vars.get('tone'), -5, 5)
-        SliderPanel(self, 'Calidez', color_vars.get('calidez'), -5, 5)
+        SliderPanel(self, 'Brillo', color_vars.get('brightness'), 0, 10)
+        SliderPanel(self, 'Saturación', color_vars.get('vibrance'), -10, 10)
 
 
 class EffectFrame(ctk.CTkFrame):
@@ -52,9 +50,9 @@ class EffectFrame(ctk.CTkFrame):
 
         DropdownPanel(self, effect_vars['effect'], EFFECT_OPTIONS)
         DropdownPanel(self, effect_vars['filter'], FILTER_OPTIONS)
-        SliderPanel(self, 'Blur', effect_vars.get('blur'), 0, 3)
-        SliderPanel(self, 'Contraste', effect_vars.get('contrast'), -10, 10)
-        SliderPanel(self, 'Claridad', effect_vars.get('clarity'), -10, 10)
+        SliderPanel(self, 'Blur', effect_vars.get('blur'), 0, 50)
+        SliderPanel(self, 'Contraste', effect_vars.get('contrast'), 0, 5)
+        SliderPanel(self, 'Nitidez', effect_vars.get('clarity'), 0, 10)
 
 
 class ExportFrame(ctk.CTkFrame):

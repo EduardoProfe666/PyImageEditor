@@ -1,7 +1,7 @@
 import customtkinter as ctk
-from PIL import Image, ImageTk, ImageOps
+from PIL import Image, ImageTk, ImageOps, ImageEnhance, ImageFilter
 
-from src.code.settings import *
+from src.settings import *
 from src.gui.components.close_output import CloseOutput
 from src.gui.components.import_image import ImportImage
 from src.gui.components.menu import Menu
@@ -59,8 +59,6 @@ class App(ctk.CTk):
             'sepia': ctk.BooleanVar(value=SEPIA_DEFAULT),
             'invert': ctk.BooleanVar(value=INVERT_DEFAULT),
             'vibrance': ctk.DoubleVar(value=VIBRANCE_DEFAULT),
-            'tone': ctk.DoubleVar(value=TONE_DEFAULT),
-            'calidez': ctk.DoubleVar(value=CALIDEZ_DEFAULT)
         }
 
         self.effect_vars = {
@@ -78,10 +76,78 @@ class App(ctk.CTk):
         self.image = self.original
 
         # rotate
-        self.image = self.image.rotate(self.pos_vars.get('rotate').get())
+        if self.pos_vars['rotate'].get() != ROTATE_DEFAULT:
+            self.image = self.image.rotate(self.pos_vars.get('rotate').get())
 
         # zoom
-        self.image = ImageOps.crop(self.image, border=self.pos_vars.get('zoom').get())
+        if self.pos_vars['zoom'].get() != ZOOM_DEFAULT:
+            self.image = ImageOps.crop(self.image, border=self.pos_vars.get('zoom').get() * 3)
+
+        # flip
+        if self.pos_vars['flip'].get() != FLIP_OPTIONS[0]:
+            if self.pos_vars.get('flip').get() == 'X':
+                self.image = ImageOps.mirror(self.image)
+            elif self.pos_vars.get('flip').get() == 'Y':
+                self.image = ImageOps.flip(self.image)
+            elif self.pos_vars.get('flip').get() == 'Ambos':
+                self.image = ImageOps.mirror(self.image)
+                self.image = ImageOps.flip(self.image)
+
+        # brightness & vibrance
+        if self.color_vars['brightness'].get() != BRIGHTNESS_DEFAULT:
+            self.image = ImageEnhance.Brightness(self.image).enhance(self.color_vars['brightness'].get())
+        if self.color_vars['vibrance'].get() != VIBRANCE_DEFAULT:
+            self.image = ImageEnhance.Color(self.image).enhance(self.color_vars['vibrance'].get())
+
+        # grayscale & invert & sepia
+        if self.color_vars['grayscale'].get():
+            self.image = ImageOps.grayscale(self.image)
+
+        if self.color_vars['invert'].get():
+            self.image = ImageOps.invert(self.image)
+
+        if self.color_vars['sepia'].get():
+            palette = []
+            r, g, b = (255, 240, 192)
+            for i in range(255):
+                palette.extend((r * i // 255, g * i // 255, b * i // 255))
+            self.image = self.image.convert('L')
+            self.image.putpalette(palette)
+
+        # blur & contrast & claridad
+        if self.effect_vars['blur'] != BLUR_DEFAULT:
+            self.image = self.image.filter(ImageFilter.GaussianBlur(self.effect_vars['blur'].get()))
+        if self.effect_vars['contrast'] != CONTRAST_DEFAULT:
+            self.image = self.image.filter(ImageFilter.UnsharpMask(self.effect_vars['contrast'].get()))
+        if self.effect_vars['clarity'] != CLARITY_DEFAULT:
+            self.image = ImageEnhance.Sharpness(self.image).enhance(self.effect_vars['clarity'].get())
+
+        # effects
+        if self.effect_vars['effect'] != EFFECT_OPTIONS[0]:
+            match self.effect_vars['effect'].get():
+                case 'Emboss':
+                    self.image = self.image.filter(ImageFilter.EMBOSS)
+                case 'Bordes Find':
+                    self.image = self.image.filter(ImageFilter.FIND_EDGES)
+                case 'Contour':
+                    self.image = self.image.filter(ImageFilter.CONTOUR)
+                case 'Bordes Enhance':
+                    self.image = self.image.filter(ImageFilter.EDGE_ENHANCE)
+                case 'Bordes Enhance+':
+                    self.image = self.image.filter(ImageFilter.EDGE_ENHANCE_MORE)
+                case 'Blur':
+                    self.image = self.image.filter(ImageFilter.BLUR)
+                case 'Detalles':
+                    self.image = self.image.filter(ImageFilter.DETAIL)
+                case 'Nítido':
+                    self.image = self.image.filter(ImageFilter.SHARPEN)
+                case 'Suave':
+                    self.image = self.image.filter(ImageFilter.SMOOTH)
+                case 'Suave+':
+                    self.image = self.image.filter(ImageFilter.SMOOTH_MORE)
+
+
+        # filters
 
         self.place_image()
 

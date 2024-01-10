@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from src.code.settings import *
+from src.settings import *
 
 
 class Panel(ctk.CTkFrame):
@@ -50,10 +50,10 @@ class SwitchPanel(Panel):
 class DropdownPanel(ctk.CTkOptionMenu):
     def __init__(self, parent, var, options):
         super().__init__(master=parent,
-                         values = options,
+                         values=options,
                          fg_color=DARK_GREY,
                          button_color=DROPDOWN_MAIN_COLOR,
                          button_hover_color=DROPDOWN_HOVER_COLOR,
                          dropdown_fg_color=DROPDOWN_MENU_COLOR,
-                         variable = var)
+                         variable=var)
         self.pack(fill='x', pady=4)

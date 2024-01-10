@@ -1,6 +1,6 @@
 from tkinter import Canvas
 
-from src.code.settings import BACKGROUND_COLOR
+from src.settings import BACKGROUND_COLOR
 
 
 class OutputImage(Canvas):

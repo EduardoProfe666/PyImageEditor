@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from src.code.settings import WHITE, CLOSE_RED
+from src.settings import WHITE, CLOSE_RED
 
 
 class CloseOutput(ctk.CTkButton):
