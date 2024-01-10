@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 
 from src.gui.components.close_output import CloseOutput
 from src.gui.components.import_image import ImportImage
+from src.gui.components.menu import Menu
 from src.gui.components.output_image import OutputImage
 
 
@@ -17,8 +18,8 @@ class App(ctk.CTk):
 
         # layout
         self.rowconfigure(0, weight=1)
-        self.columnconfigure(0, weight=2)
-        self.columnconfigure(1, weight=6)
+        self.columnconfigure(0, weight=2, uniform='a')
+        self.columnconfigure(1, weight=6, uniform='a')
 
         # widgets
         self.image_import = ImportImage(self, self.import_image)
@@ -34,6 +35,7 @@ class App(ctk.CTk):
         self.image_import.grid_forget()
         self.image_output = OutputImage(self, self.resize_image)
         self.close_button = CloseOutput(self, self.close_edit)
+        self.menu = Menu(self)
 
     def resize_image(self, event):
         canvas_ratio = event.width / event.height
@@ -53,6 +55,7 @@ class App(ctk.CTk):
     def close_edit(self):
         self.image_output.grid_forget()
         self.close_button.place_forget()
+        self.menu.grid_forget()
         self.image_import = ImportImage(self, self.import_image)
 
 

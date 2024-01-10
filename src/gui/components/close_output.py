@@ -7,7 +7,7 @@ class CloseOutput(ctk.CTkButton):
     def __init__(self, parent, func):
         super().__init__(master=parent,
                          command = func,
-                         text='🗙',
+                         text='Cerrar Sin Guardar',
                          text_color=WHITE,
                          fg_color='transparent',
                          width=40,
