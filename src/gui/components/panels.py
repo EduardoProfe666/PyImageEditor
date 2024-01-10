@@ -83,7 +83,7 @@ class FileNamePanel(Panel):
         self.name_string = name_string
         self.name_string.trace('w', self.update_text)
 
-        ctk.CTkEntry(self, textvariable=self.name_string).pack(fill='x', padx=20, pady=5)
+        ctk.CTkEntry(self, textvariable=self.name_string, placeholder_text='Nombre de la Imagen').pack(fill='x', padx=20, pady=5)
         frame = ctk.CTkFrame(self, fg_color='transparent')
         png_check = ctk.CTkCheckBox(frame, text='png', variable=self.file_string, onvalue='png', offvalue='jpg',
                                     command=lambda: self.click('png'))
@@ -103,6 +103,8 @@ class FileNamePanel(Panel):
         if self.name_string.get():
             text = self.name_string.get().replace(' ', '_') + '.' + self.file_string.get()
             self.output.configure(text=text)
+        else:
+            self.output.configure(text='')
 
 
 class FilePathPanel(Panel):
@@ -112,9 +114,23 @@ class FilePathPanel(Panel):
         self.path_string = path_string
 
         ctk.CTkButton(self, text='Ubicación de la Imagen', command=self.open_file_dialog).pack(pady=5)
-        self.label = ctk.CTkLabel(self)
+        self.label = ctk.CTkLabel(self, text='')
         self.label.pack(expand=True, fill='both', padx=5, pady=5)
 
     def open_file_dialog(self):
         self.path_string.set(filedialog.askdirectory(title='Seleccione el directorio de salida'))
         self.label.configure(text=self.path_string.get())
+
+
+class SaveButton(ctk.CTkButton):
+    def __init__(self, parent, export, name_string, file_string, path_string):
+        super().__init__(master=parent, text='Exportar', command=self.save)
+        self.pack(side = 'bottom', pady = 10)
+
+        self.export = export
+        self.file = file_string
+        self.path = path_string
+        self.name = name_string
+
+    def save(self):
+        self.export(self.name.get(),self.file.get(), self.path.get())

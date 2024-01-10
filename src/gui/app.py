@@ -1,3 +1,5 @@
+from tkinter import messagebox
+
 import customtkinter as ctk
 from PIL import Image, ImageTk, ImageOps, ImageEnhance, ImageFilter
 
@@ -44,7 +46,7 @@ class App(ctk.CTk):
         self.image_import.grid_forget()
         self.image_output = OutputImage(self, self.resize_image)
         self.close_button = CloseOutput(self, self.close_edit)
-        self.menu = Menu(self, self.pos_vars, self.color_vars, self.effect_vars)
+        self.menu = Menu(self, self.pos_vars, self.color_vars, self.effect_vars, self.export_image)
 
     def init_parameters(self):
         self.pos_vars = {
@@ -65,7 +67,6 @@ class App(ctk.CTk):
             'blur': ctk.DoubleVar(value=BLUR_DEFAULT),
             'contrast': ctk.IntVar(value=CONTRAST_DEFAULT),
             'clarity': ctk.DoubleVar(value=CLARITY_DEFAULT),
-            'filter': ctk.StringVar(value=FILTER_OPTIONS[0]),
             'effect': ctk.StringVar(value=EFFECT_OPTIONS[0])
         }
 
@@ -146,7 +147,6 @@ class App(ctk.CTk):
                 case 'Suave+':
                     self.image = self.image.filter(ImageFilter.SMOOTH_MORE)
 
-
         # filters
 
         self.place_image()
@@ -177,6 +177,23 @@ class App(ctk.CTk):
         self.close_button.place_forget()
         self.menu.grid_forget()
         self.image_import = ImportImage(self, self.import_image)
+
+    def export_image(self, name, file, path):
+        try:
+            print(name)
+            if not name:
+                messagebox.showerror('Nombre no válido', 'Introduzca un nombre válido')
+            elif path == '':
+                messagebox.showerror('Ruta no válida', 'Introduzca una ruta válida')
+            else:
+                export_string = f'{path}/{name}.{file}'
+                self.image.save(export_string)
+                messagebox.showinfo('Exportación con Éxito',
+                                    'Se exportó la imagen correctamente en la ruta: ' + export_string)
+                Image.open(export_string).show(name)
+        except Exception:
+            messagebox.showerror('Exportación Fallida',
+                                 'Fallo durante la exportación de la imagen. Vuelva a intentarlo')
 
 
 if __name__ == '__main__':

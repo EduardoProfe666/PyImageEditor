@@ -2,11 +2,11 @@ import customtkinter as ctk
 
 from src.settings import *
 from src.gui.components.panels import SliderPanel, SegmentedPanel, SwitchPanel, DropdownPanel, RevertButton, \
-    FileNamePanel, FilePathPanel
+    FileNamePanel, FilePathPanel, SaveButton
 
 
 class Menu(ctk.CTkTabview):
-    def __init__(self, parent, pos_vars, color_vars, effect_vars):
+    def __init__(self, parent, pos_vars, color_vars, effect_vars, export):
         super().__init__(master=parent)
         self.grid(row=0, column=0, sticky="nsew", pady=10, padx=10)
 
@@ -20,7 +20,7 @@ class Menu(ctk.CTkTabview):
         PositionFrame(self.tab('Posición'), pos_vars.get('rotate'), pos_vars.get('zoom'), pos_vars.get('flip'))
         ColorFrame(self.tab('Colores'), color_vars)
         EffectFrame(self.tab('Efectos'), effect_vars)
-        ExportFrame(self.tab('Exportar'))
+        ExportFrame(self.tab('Exportar'), export)
 
 
 class PositionFrame(ctk.CTkFrame):
@@ -60,28 +60,27 @@ class EffectFrame(ctk.CTkFrame):
         self.pack(expand=True, fill="both")
 
         DropdownPanel(self, effect_vars['effect'], EFFECT_OPTIONS)
-        DropdownPanel(self, effect_vars['filter'], FILTER_OPTIONS)
         SliderPanel(self, 'Blur', effect_vars.get('blur'), 0, 50)
         SliderPanel(self, 'Contraste', effect_vars.get('contrast'), 0, 5)
         SliderPanel(self, 'Nitidez', effect_vars.get('clarity'), 0, 10)
         RevertButton(self,
                      (effect_vars['effect'], EFFECT_OPTIONS[0]),
-                     (effect_vars['filter'], FILTER_OPTIONS[0]),
                      (effect_vars.get('blur'), BLUR_DEFAULT),
                      (effect_vars.get('contrast'), CONTRAST_DEFAULT),
                      (effect_vars.get('clarity'), CLARITY_DEFAULT))
 
 
 class ExportFrame(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, export):
         super().__init__(master=parent, fg_color='transparent')
         self.pack(expand=True, fill="both")
 
         # data
         self.name_string = ctk.StringVar()
         self.file_string = ctk.StringVar(value='png')
-        self.path_string = ctk.StringVar
+        self.path_string = ctk.StringVar()
 
         # widgets
         FileNamePanel(self, self.name_string, self.file_string)
         FilePathPanel(self, self.path_string)
+        SaveButton(self, export, self.name_string, self.file_string, self.path_string)
