@@ -7,7 +7,10 @@ from src.gui.components.panels import SliderPanel, SegmentedPanel, SwitchPanel, 
 
 class Menu(ctk.CTkTabview):
     def __init__(self, parent, pos_vars, color_vars, effect_vars, export):
-        super().__init__(master=parent)
+        super().__init__(master=parent,
+                         segmented_button_selected_color=DARK_PURPLE,
+                         segmented_button_selected_hover_color=PURPLE,
+                         segmented_button_unselected_hover_color=DARK_PURPLE)
         self.grid(row=0, column=0, sticky="nsew", pady=10, padx=10)
 
         # tabs
