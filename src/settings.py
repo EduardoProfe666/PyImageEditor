@@ -1,16 +1,16 @@
 # default values
-ROTATE_DEFAULT = 0
-ZOOM_DEFAULT = 0
+ROTATE_DEFAULT = 0.0
+ZOOM_DEFAULT = 0.0
 FLIP_OPTIONS = ['Ninguno', 'X', 'Y', 'Ambos']
-BLUR_DEFAULT = 0
-CONTRAST_DEFAULT = 1
+BLUR_DEFAULT = 0.0
+CONTRAST_DEFAULT = 1.0
 EFFECT_OPTIONS = ['Ningún Efecto', 'Emboss', 'Bordes Find', 'Contour', 'Bordes Enhance', 'Bordes Enhance+', 'Blur', 'Detalles', 'Nítido', 'Suave', 'Suave+']
 BRIGHTNESS_DEFAULT = 1
-VIBRANCE_DEFAULT = 1
+VIBRANCE_DEFAULT = 1.0
 GRAYSCALE_DEFAULT = False
 SEPIA_DEFAULT = False
 INVERT_DEFAULT = False
-CLARITY_DEFAULT = 1
+CLARITY_DEFAULT = 1.0
 
 # Colors
 BACKGROUND_COLOR = '#242424'

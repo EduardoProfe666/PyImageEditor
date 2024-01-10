@@ -1,7 +1,7 @@
 from tkinter import messagebox
 
 import customtkinter as ctk
-from PIL import Image, ImageTk, ImageOps, ImageEnhance, ImageFilter
+from PIL import Image, ImageTk, ImageOps, ImageEnhance, ImageFilter, ImageChops
 
 from src.settings import *
 from src.gui.components.close_output import CloseOutput
@@ -100,31 +100,16 @@ class App(ctk.CTk):
         if self.color_vars['vibrance'].get() != VIBRANCE_DEFAULT:
             self.image = ImageEnhance.Color(self.image).enhance(self.color_vars['vibrance'].get())
 
-        # grayscale & invert & sepia
-        if self.color_vars['grayscale'].get():
-            self.image = ImageOps.grayscale(self.image)
-
-        if self.color_vars['invert'].get():
-            self.image = ImageOps.invert(self.image)
-
-        if self.color_vars['sepia'].get():
-            palette = []
-            r, g, b = (255, 240, 192)
-            for i in range(255):
-                palette.extend((r * i // 255, g * i // 255, b * i // 255))
-            self.image = self.image.convert('L')
-            self.image.putpalette(palette)
-
         # blur & contrast & claridad
-        if self.effect_vars['blur'] != BLUR_DEFAULT:
+        if self.effect_vars['blur'].get() != BLUR_DEFAULT:
             self.image = self.image.filter(ImageFilter.GaussianBlur(self.effect_vars['blur'].get()))
-        if self.effect_vars['contrast'] != CONTRAST_DEFAULT:
+        if self.effect_vars['contrast'].get() != CONTRAST_DEFAULT:
             self.image = self.image.filter(ImageFilter.UnsharpMask(self.effect_vars['contrast'].get()))
-        if self.effect_vars['clarity'] != CLARITY_DEFAULT:
+        if self.effect_vars['clarity'].get() != CLARITY_DEFAULT:
             self.image = ImageEnhance.Sharpness(self.image).enhance(self.effect_vars['clarity'].get())
 
         # effects
-        if self.effect_vars['effect'] != EFFECT_OPTIONS[0]:
+        if self.effect_vars['effect'].get() != EFFECT_OPTIONS[0]:
             match self.effect_vars['effect'].get():
                 case 'Emboss':
                     self.image = self.image.filter(ImageFilter.EMBOSS)
@@ -147,7 +132,19 @@ class App(ctk.CTk):
                 case 'Suave+':
                     self.image = self.image.filter(ImageFilter.SMOOTH_MORE)
 
-        # filters
+        # grayscale & invert & sepia
+        if self.color_vars['invert'].get():
+            self.image = ImageChops.invert(self.image)
+        if self.color_vars['sepia'].get():
+            palette = []
+            r, g, b = (255, 240, 192)
+            for i in range(255):
+                palette.extend((r * i // 255, g * i // 255, b * i // 255))
+            self.image = self.image.convert('L')
+            self.image.putpalette(palette)
+        if self.color_vars['grayscale'].get():
+            self.image = ImageOps.grayscale(self.image)
+
 
         self.place_image()
 
