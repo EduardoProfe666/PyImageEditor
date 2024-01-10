@@ -1,3 +1,5 @@
+from tkinter import filedialog
+
 import customtkinter as ctk
 
 from src.settings import *
@@ -84,7 +86,7 @@ class FileNamePanel(Panel):
         ctk.CTkEntry(self, textvariable=self.name_string).pack(fill='x', padx=20, pady=5)
         frame = ctk.CTkFrame(self, fg_color='transparent')
         png_check = ctk.CTkCheckBox(frame, text='png', variable=self.file_string, onvalue='png', offvalue='jpg',
-                                    command= lambda: self.click('png'))
+                                    command=lambda: self.click('png'))
         jpg_check = ctk.CTkCheckBox(frame, text='jpg', variable=self.file_string, onvalue='jpg', offvalue='png',
                                     command=lambda: self.click('jpg'))
         png_check.pack(side='left', fill='x', expand=True)
@@ -101,3 +103,18 @@ class FileNamePanel(Panel):
         if self.name_string.get():
             text = self.name_string.get().replace(' ', '_') + '.' + self.file_string.get()
             self.output.configure(text=text)
+
+
+class FilePathPanel(Panel):
+    def __init__(self, parent, path_string):
+        super().__init__(parent=parent)
+
+        self.path_string = path_string
+
+        ctk.CTkButton(self, text='Ubicación de la Imagen', command=self.open_file_dialog).pack(pady=5)
+        self.label = ctk.CTkLabel(self)
+        self.label.pack(expand=True, fill='both', padx=5, pady=5)
+
+    def open_file_dialog(self):
+        self.path_string.set(filedialog.askdirectory(title='Seleccione el directorio de salida'))
+        self.label.configure(text=self.path_string.get())
