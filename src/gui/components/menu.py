@@ -1,7 +1,7 @@
 import customtkinter as ctk
 
 from src.settings import *
-from src.gui.components.panels import SliderPanel, SegmentedPanel, SwitchPanel, DropdownPanel
+from src.gui.components.panels import SliderPanel, SegmentedPanel, SwitchPanel, DropdownPanel, RevertButton
 
 
 class Menu(ctk.CTkTabview):
@@ -30,6 +30,10 @@ class PositionFrame(ctk.CTkFrame):
         SliderPanel(self, 'Rotación', rotation, -180, 180)
         SliderPanel(self, 'Zoom', zoom, 0, 100)
         SegmentedPanel(self, 'Inversión', invert, FLIP_OPTIONS)
+        RevertButton(self,
+                     (rotation, ROTATE_DEFAULT),
+                     (zoom, ZOOM_DEFAULT),
+                     (invert, FLIP_OPTIONS[0]))
 
 
 class ColorFrame(ctk.CTkFrame):
@@ -41,6 +45,12 @@ class ColorFrame(ctk.CTkFrame):
         SwitchPanel(self, (color_vars['sepia'], 'Sepia'))
         SliderPanel(self, 'Brillo', color_vars.get('brightness'), 0, 10)
         SliderPanel(self, 'Saturación', color_vars.get('vibrance'), -10, 10)
+        RevertButton(self,
+                     (color_vars['grayscale'], GRAYSCALE_DEFAULT),
+                     (color_vars['sepia'], SEPIA_DEFAULT),
+                     (color_vars['invert'], INVERT_DEFAULT),
+                     (color_vars.get('brightness'), BRIGHTNESS_DEFAULT),
+                     (color_vars.get('vibrance'), VIBRANCE_DEFAULT))
 
 
 class EffectFrame(ctk.CTkFrame):
@@ -53,6 +63,12 @@ class EffectFrame(ctk.CTkFrame):
         SliderPanel(self, 'Blur', effect_vars.get('blur'), 0, 50)
         SliderPanel(self, 'Contraste', effect_vars.get('contrast'), 0, 5)
         SliderPanel(self, 'Nitidez', effect_vars.get('clarity'), 0, 10)
+        RevertButton(self,
+                     (effect_vars['effect'], EFFECT_OPTIONS[0]),
+                     (effect_vars['filter'], FILTER_OPTIONS[0]),
+                     (effect_vars.get('blur'), BLUR_DEFAULT),
+                     (effect_vars.get('contrast'), CONTRAST_DEFAULT),
+                     (effect_vars.get('clarity'), CLARITY_DEFAULT))
 
 
 class ExportFrame(ctk.CTkFrame):
