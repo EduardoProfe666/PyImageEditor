@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk, ImageOps
 
-from src.code.settings import ROTATE_DEFAULT, ZOOM_DEFAULT
+from src.code.settings import *
 from src.gui.components.close_output import CloseOutput
 from src.gui.components.import_image import ImportImage
 from src.gui.components.menu import Menu
@@ -14,7 +14,7 @@ class App(ctk.CTk):
         super().__init__()
         self.init_parameters()
         ctk.set_appearance_mode('dark')
-        self.geometry('1000x600+30+30')
+        self.geometry('1100x600+30+30')
         self.title('PyImageEditor')
         self.minsize(800, 500)
 
@@ -44,23 +44,44 @@ class App(ctk.CTk):
         self.image_import.grid_forget()
         self.image_output = OutputImage(self, self.resize_image)
         self.close_button = CloseOutput(self, self.close_edit)
-        self.menu = Menu(self, self.rotate_float, self.zoom_float)
+        self.menu = Menu(self, self.pos_vars, self.color_vars, self.effect_vars)
 
     def init_parameters(self):
-        self.rotate_float = ctk.DoubleVar(value=ROTATE_DEFAULT)
-        self.zoom_float = ctk.DoubleVar(value=ZOOM_DEFAULT)
+        self.pos_vars = {
+            'rotate': ctk.DoubleVar(value=ROTATE_DEFAULT),
+            'zoom': ctk.DoubleVar(value=ZOOM_DEFAULT),
+            'flip': ctk.StringVar(value=FLIP_OPTIONS[0])
+        }
 
-        self.rotate_float.trace('w', self.manipulate_image)
-        self.zoom_float.trace('w', self.manipulate_image)
+        self.color_vars = {
+            'brightness': ctk.DoubleVar(value=BRIGHTNESS_DEFAULT),
+            'grayscale': ctk.BooleanVar(value=GRAYSCALE_DEFAULT),
+            'sepia': ctk.BooleanVar(value=SEPIA_DEFAULT),
+            'invert': ctk.BooleanVar(value=INVERT_DEFAULT),
+            'vibrance': ctk.DoubleVar(value=VIBRANCE_DEFAULT),
+            'tone': ctk.DoubleVar(value=TONE_DEFAULT),
+            'calidez': ctk.DoubleVar(value=CALIDEZ_DEFAULT)
+        }
+
+        self.effect_vars = {
+            'blur': ctk.DoubleVar(value=BLUR_DEFAULT),
+            'contrast': ctk.IntVar(value=CONTRAST_DEFAULT),
+            'clarity': ctk.DoubleVar(value=CLARITY_DEFAULT),
+            'filter': ctk.StringVar(value=FILTER_OPTIONS[0]),
+            'effect': ctk.StringVar(value=EFFECT_OPTIONS[0])
+        }
+
+        for var in list(self.pos_vars.values()) + list(self.color_vars.values()) + list(self.effect_vars.values()):
+            var.trace('w', self.manipulate_image)
 
     def manipulate_image(self, *args):
         self.image = self.original
 
         # rotate
-        self.image = self.image.rotate(self.rotate_float.get())
+        self.image = self.image.rotate(self.pos_vars.get('rotate').get())
 
         # zoom
-        self.image = ImageOps.crop(self.image, border=self.zoom_float.get())
+        self.image = ImageOps.crop(self.image, border=self.pos_vars.get('zoom').get())
 
         self.place_image()
 
@@ -85,6 +106,7 @@ class App(ctk.CTk):
         self.image_output.create_image(self.canvas_width / 2, self.canvas_height / 2, image=self.image_tk)
 
     def close_edit(self):
+        self.init_parameters()
         self.image_output.grid_forget()
         self.close_button.place_forget()
         self.menu.grid_forget()
